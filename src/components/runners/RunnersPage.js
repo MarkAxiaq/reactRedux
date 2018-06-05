@@ -1,14 +1,15 @@
-import React, { PropTypes } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import * as runnersActions from '../../redux/reduxActions/runnersActions';
+import React, { PropTypes } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as runnersActions from "../../redux/reduxActions/runnersActions";
+import RunnerList from './RunnersList';
 
 class RunnersPage extends React.Component {
   constructor(props, context) {
     super(props, context);
 
     this.state = {
-      runner: { name: '' }
+      runner: { }
     };
 
     // Without this code the "this" keyword in the below functions will point to the event passed and not to the class
@@ -23,28 +24,16 @@ class RunnersPage extends React.Component {
   }
 
   onSave() {
-    this.props.dispatch(runnersActions.createRunner(this.state.runner));
-  }
-
-  displayRunner(runner, index) {
-    return (
-      <div className="col-3" key={index}>
-        {runner.name}
-      </div>
-    );
+    this.props.actions.createRunner(this.state.runner);
   }
 
   render() {
     return (
       // To extract this into a presentation component called AddRunnerForm
-      <div className="row justify-content-center">
-        <div className="col-8">
-          <h1>Runners</h1>
-          {this.props.runners}
-          <h3>
-            <small>Add runner:</small>
-          </h3>
-          <form>
+      <div className="container-fluid">
+        <div className="row justify-content-center">
+          <div className="col-8">
+            <h1>Add runner:</h1>
             <div className="form-group">
               <label htmlFor="runnerName">Runner Name</label>
               <input
@@ -60,35 +49,37 @@ class RunnersPage extends React.Component {
             <button
               type="submit"
               className="btn btn-primary"
-              onClick={this.onSave}>
+              onClick={this.onSave}
+            >
               Submit
             </button>
-          </form>
+          </div>
         </div>
+        <RunnerList runners={this.props.runners} />
       </div>
     );
   }
 }
 RunnersPage.propTypes = {
-  //dispatch: PropTypes.func.isRequired
-  runners: PropTypes.array.isRequired
+  runners: PropTypes.array.isRequired,
+  actions: PropTypes.object.isRequired
 };
 
-function mapStateToProps(state, ownProps) {
+const  mapStateToProps = (state, ownProps) => {
   return {
     runners: state.runners
   };
-}
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    actions : bindActionCreators(runnersActions, dispatch)
+  };
+};
 
 // I could have done the two code lines below this comment
 // ---- const connectedStateAndProps = connect(mapStateToProps, mapDispatchToProps);
 // ---- export default connectedStateAndProps(RunnersPage);
 
 // It is exactly the same as the below line - connect function returns a function that immediately calls our RunnersPage component
-export default connect(mapStateToProps)(RunnersPage);
-
-// <div className="col">
-//   <p>To extract this into a presentation component called RunnersDisplay</p>
-//   <h1>Malta Runners</h1>
-//   {this.props.runners.map(this.displayRunner)}
-// </div>;
+export default connect(mapStateToProps, mapDispatchToProps)(RunnersPage);
