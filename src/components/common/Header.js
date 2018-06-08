@@ -34,6 +34,12 @@ const Header = () => {
             activeclassName="active">
             Runners
           </Link>
+          <Link
+            to="/manageRunner"
+            className="nav-item nav-link"
+            activeclassName="active">
+            Manage Runner
+          </Link>
         </div>
       </div>
     </nav>
