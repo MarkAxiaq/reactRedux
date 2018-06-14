@@ -39,11 +39,11 @@ function replaceAll(str, find, replace) {
 }
 
 //This would be performed on the server in a real app. Just stubbing in.
-const generateId = (course) => {
-  return replaceAll(course.title, ' ', '-');
+const generateId = (runner) => {
+  return replaceAll(runner.name, ' ', '-');
 };
 
-class CourseApi {
+class RunnersApi {
   static getAllRunners() {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
@@ -52,44 +52,45 @@ class CourseApi {
     });
   }
 
-  static saveCourse(course) {
-    course = Object.assign({}, course); // to avoid manipulating object passed in.
+  static saveRunner(runner) {
+    runner = Object.assign({}, runner); // to avoid manipulating object passed in.
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         // Simulate server-side validation
-        const minCourseTitleLength = 1;
-        if (course.title.length < minCourseTitleLength) {
-          reject(`Title must be at least ${minCourseTitleLength} characters.`);
+        const minRunnernameLength = 3;
+        if (runner.name.length < minRunnernameLength) {
+          reject(`name must be at least ${minRunnernameLength} characters.`);
         }
 
-        if (course.id) {
-          const existingCourseIndex = runners.findIndex(a => a.id == course.id);
-          runners.splice(existingCourseIndex, 1, course);
+        if (runner.id) {
+          // The findIndex() method returns the index of the first element in the array that satisfies the provided testing function. Otherwise -1 is returned.
+          const existingRunnerIndex = runners.findIndex(element => element.id === runner.id);
+          // The splice() method changes the contents of an array by removing existing elements and/or adding new elements.
+          runners.splice(existingRunnerIndex, 1, runner);
         } else {
           //Just simulating creation here.
-          //The server would generate ids and watchHref's for new courses in a real app.
+          //The server would generate ids for new runners in a real app.
           //Cloning so copy returned is passed by value rather than by reference.
-          course.id = generateId(course);
-          course.watchHref = `http://www.pluralsight.com/courses/${course.id}`;
-          runners.push(course);
+          runner.id = generateId(runner);
+          runners.push(runner);
         }
 
-        resolve(course);
+        resolve(runner);
       }, delay);
     });
   }
 
-  static deleteCourse(courseId) {
+  static deleteRunner(runnerId) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        const indexOfCourseToDelete = runners.findIndex(course => {
-          course.id == courseId;
+        const indexOfRunnerToDelete = runners.findIndex(runner => {
+          runner.id == runnerId;
         });
-        runners.splice(indexOfCourseToDelete, 1);
+        runners.splice(indexOfRunnerToDelete, 1);
         resolve();
       }, delay);
     });
   }
 }
 
-export default CourseApi;
+export default RunnersApi;

@@ -1,2 +1,3 @@
 export const CREATE_RUNNER = 'CREATE_RUNNER';
+export const UPDATE_RUNNER = 'UPDATE_RUNNER';
 export const LOAD_ALL_RUNNERS = 'LOAD_ALL_RUNNERS';
